@@ -50,7 +50,7 @@ if choice[0].lower() == "y":
     operation = args.operation
     if operation == "move_to":
         print("Moving files to django project...")
-        for directory in os.listdir("html/"):
+        for directory in os.listdir(local_path):
             dstpath = f"{full_path}/{directory}/{tmpl}"
             if os.path.exists(dstpath):
                 shutil.copytree(f"{local_path}/{directory}", dstpath, dirs_exist_ok=True)
@@ -61,7 +61,8 @@ if choice[0].lower() == "y":
             srcpath = f"{full_path}/{directory}/{tmpl}/"
             if os.path.exists(srcpath):
                 new_dir = f"{local_path}/{directory}"
-                os.makedirs(new_dir)
+                if not os.path.exists(new_dir):
+                    os.makedirs(new_dir)
                 shutil.copytree(srcpath, new_dir, dirs_exist_ok=True)
         print("Finished moving files from project, quitting.")
     else:
