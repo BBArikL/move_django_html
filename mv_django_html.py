@@ -52,8 +52,9 @@ if choice[0].lower() == "y":
         print("Moving files to django project...")
         for directory in os.listdir(local_path):
             dstpath = f"{full_path}/{directory}/{tmpl}"
-            if os.path.exists(dstpath):
-                shutil.copytree(f"{local_path}/{directory}", dstpath, dirs_exist_ok=True)
+            if not os.path.exists(dstpath):
+                os.makedirs(dstpath)
+            shutil.copytree(f"{local_path}/{directory}", dstpath, dirs_exist_ok=True)
         print("Finished moving files to project, quitting.")
     elif operation == "move_from":
         print("Moving files from django project...")
