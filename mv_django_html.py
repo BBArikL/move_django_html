@@ -4,15 +4,15 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Move Html files to and from a django project. '
                                              'HTML directory names need to match the name that the django project '
-                                             'directories. If no argument is passed to -local , '
+                                             'directories. If no argument is passed to --local , '
                                              f'the program will assume that the html directories are in '
                                              f'{os.getcwd()}/html.')
-parser.add_argument('--project_path', type=str, help='The path to the Django project. REQUIRED')
+parser.add_argument('--project_path', type=str, help='The path to the Django project. REQUIRED', required=True)
 parser.add_argument('--project_name', type=str,
-                    help='The name of the django project. REQUIRED')
-parser.add_argument('--operation', type=str, help='The operation to do. Supported: move_to, move_from. REQUIRED')
+                    help='The name of the django project. REQUIRED', required=True)
+parser.add_argument('--operation', type=str, help='The operation to do. Supported: move_to, move_from. REQUIRED', required=True)
 parser.add_argument('--local', type=str, help='Name of the local directory containing html files. OPTIONAL')
-
+parser.add_argument('--no_confirm', nargs="?", dest="NO_CONFIRM", default=False, const=True, help='If skip the confirm prompt.')
 
 args = parser.parse_args()
 
@@ -43,8 +43,11 @@ if not os.path.exists(local_path):
         exit(1)
 
 # Operations, finally!
-choice = input("No path errors could be found. The next steps will overwrite all files in the destination "
+if not args.NO_CONFIRM:
+  choice = input("No path errors could be found. The next steps will overwrite all files in the destination "
                "directories. Double-check your operation before continuing. Do you want to continue? (y/n) ")
+ else:
+  choice = "y"
 
 if choice[0].lower() == "y":
     operation = args.operation
